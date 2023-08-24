@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
+import { fetchMovies } from './movies';
+import MovieList from './assets/components/MovieList';
+import background from './assets/images/popcorn.jpg'
 
 function App() {
-  const [count, setCount] = useState(0)
+ const [movies, setMovies] = useState([]);
+
+
+ useEffect(() => {
+  // Fetch films
+  fetchMovies()
+    .then(data => {
+      // is therer data? if yes,we take the state : setMovies!
+      if (data && data.results) {
+        setMovies(data.results);
+      }
+    })
+    .catch(error => {
+      console.error('Error by fetching data : ', error);
+    });
+}, []); // empty array : it will run once.
+
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <MovieList movies={movies}/>
     </>
   )
 }
